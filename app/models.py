@@ -19,6 +19,8 @@ class User(UserMixin,db.Model):
     pass_secure=db.Column(db.String(255))
     bio=db.Column(db.String(255))
     profile_pic_url=db.Column(db.String())
+    comments=db.relationship('Comment',backref='user' ,lazy="dynamic")
+    pitches=db.relationship('Pitch',backref='user' ,lazy="dynamic")
 
     @property
     def password(self):
@@ -48,7 +50,7 @@ class Role(db.Model):
         return f'User {self.name} '
 
 class Comment(db.Model):
-    __tablename__='comment'
+    __tablename__='comments'
 
     identity=db.Column(db.Integer,primary_key=True)
     pitch_id=db.Column(db.Integer)
@@ -65,3 +67,16 @@ class Comment(db.Model):
     def get_comment(cls,identity):
         comments=Comment.query.filter_by(pitch_id=identity).all()
         return comments
+
+class Pitch:
+    #class to define pitch objects
+    __tablename__='pitches'
+
+    identity=db.Column(db.Integer,primary_key=True)
+    title=db.Column(db.String(255))
+    image_url=db.Column(db.String)
+    category=db.Column(db.String)
+    author=db.Column(db.String(255))
+    description=db.Column(db.String)
+    published=db.Column(db.DateTime,default=datetime.utcnow)
+    user_id=db.Column(db.Integer,db.ForeignKey('users.identity'))
