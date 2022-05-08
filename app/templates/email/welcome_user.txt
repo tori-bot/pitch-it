@@ -1,0 +1,4 @@
+Hello {{user.username}}!
+Welcome to Pitch It.
+You have successfully registered with us and we are excited that you have joined our community.
+ Feel free to browse our catalogue and contact us to give feedback or ask for help. 
