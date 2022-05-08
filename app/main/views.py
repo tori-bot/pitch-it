@@ -18,6 +18,8 @@ def profile(uname):
 
     return render_template('profile/profile.html',user=user)
 
+
+
 # @main.route('/comment',methods=['GET','POST'])
 # @login_required
 # def new_comment(identify):
