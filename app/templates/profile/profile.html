@@ -28,5 +28,8 @@
 <div class="row">
     <h1>user's pitches</h1>
 </div>
+{% if user==current_user %}
+<a href="{{url_for('main.update_profile',uname=user.username)}} ">Edit profile</a>
+{% endif %}
 </div>
 {% endblock %}
