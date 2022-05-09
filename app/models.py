@@ -12,15 +12,15 @@ class User(UserMixin,db.Model):
     #model to create new users
     __tablename__='users'
 
-    identity=db.Column(db.Integer,primary_key=True)
-    username=db.Column(db.String(255))
+    id=db.Column(db.Integer,primary_key=True)
+    username=db.Column(db.String(255),unique=True)
     email = db.Column(db.String(255),unique = True,index = True)
-    role_id=db.Column(db.Integer,db.ForeignKey('roles.identity'))
+    # role_id=db.Column(db.Integer,db.ForeignKey('roles.role_id'))
     pass_secure=db.Column(db.String(255))
     bio=db.Column(db.String(255))
     profile_pic_url=db.Column(db.String())
-    comments=db.relationship('Comment',backref='user' ,lazy="dynamic")
-    pitches=db.relationship('Pitch',backref='user' ,lazy="dynamic")
+    comments=db.relationship('Comment',backref='author' ,lazy="dynamic")
+    pitches=db.relationship('Pitch',backref='author' ,lazy="dynamic")
 
     @property
     def password(self):
@@ -37,49 +37,50 @@ class User(UserMixin,db.Model):
     def __repr__(self):
         return f'User {self.username} '
 
-class Role(db.Model):
-    #class to define different roles
-    __tablename__='roles'
+# class Role(db.Model):
+#     #class to define different roles
+#     __tablename__='roles'
 
-    identity=db.Column(db.Integer,primary_key=True)
-    name=db.Column(db.String(255))
-    users=db.relationship('User',backref='role' ,lazy="dynamic")
+#     role_id=db.Column(db.Integer,primary_key=True)
+#     name=db.Column(db.String(255))
+#     users=db.relationship('User',backref='role' ,lazy="dynamic")
 
 
-    def __repr__(self):
-        return f'User {self.name} '
+    # def __repr__(self):
+    #     return f'User {self.name} '
 
 class Comment(db.Model):
     __tablename__='comments'
 
-    identity=db.Column(db.Integer,primary_key=True)
-    pitch_id=db.Column(db.Integer)
-    pitch_title=db.Column(db.String)
-    pitch_comment=db.Column(db.String)
+    id=db.Column(db.Integer,primary_key=True)
+    pitch_id=db.Column(db.Integer,db.ForeignKey('pitches.id',ondelete='CASCADE'))
+    content=db.Column(db.Text)
     posted=db.Column(db.DateTime,default=datetime.utcnow)
-    user_id=db.Column(db.Integer,db.ForeignKey('users.identity'))
+    user_id=db.Column(db.Integer,db.ForeignKey('users.id'))
 
-    def save_comment(self):
-        db.session.add(self)
-        db.session.commit()
+    # def save_comment(self):
+    #     db.session.add(self)
+    #     db.session.commit()
 
-    @classmethod
-    def get_comment(cls,identity):
-        comments=Comment.query.filter_by(pitch_id=identity).all()
-        return comments
-
+    # @classmethod
+    # def get_comment(cls,identity):
+    #     comments=Comment.query.filter_by(pitch_id=identity).all()
+    #     return comments
+    def __repr__(self):
+        return(f"User('{self.content}', '{self.posted}')")
 class Pitch:
     #class to define pitch objects
     __tablename__='pitches'
 
-    identity=db.Column(db.Integer,primary_key=True)
+    id=db.Column(db.Integer,primary_key=True)
     title=db.Column(db.String(255))
     image_url=db.Column(db.String)
     category=db.Column(db.String)
     author=db.Column(db.String(255))
-    description=db.Column(db.String)
+    content=db.Column(db.Text)
     published=db.Column(db.DateTime,default=datetime.utcnow)
-    user_id=db.Column(db.Integer,db.ForeignKey('users.identity'))
+    user_id=db.Column(db.Integer,db.ForeignKey('users.user_id'))
+    comments=db.relationship('Comment',backref='pitch',lazy="dynamic")
 
     def save_pitch(self):
         db.session.add(self)
@@ -87,5 +88,9 @@ class Pitch:
 
     @classmethod
     def get_pitches(cls,category):
-        pitches=Pitch.query.filter_by(category).all()
+        pitches=Pitch.query.filter_by(category=category).all()
         return pitches
+
+    def __repr__(self):
+        return(f"User ('{self.title}','{self.published}')")
+

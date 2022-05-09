@@ -44,7 +44,7 @@ def profile(uname):
 
 
 
-@main.route('/pitch/<int:identity')
+@main.route('/pitch/<int:identity>')
 def pitch(identity):
     pitch=Pitch.query.filter_by(identity=identity).first()
     title=f'{pitch.title} '
