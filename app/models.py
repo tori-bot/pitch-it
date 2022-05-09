@@ -18,7 +18,7 @@ class User(UserMixin,db.Model):
     pass_secure=db.Column(db.String(255))
     bio=db.Column(db.String(255))
     profile_pic_url=db.Column(db.String())
-    comments=db.relationship('Comment',backref='author' ,lazy="dynamic")
+    comments=db.relationship('Comment',backref='user' ,lazy="dynamic")
     pitches=db.relationship('Pitch',backref='user' ,lazy="dynamic")
     upvotes = db.relationship('Upvote', backref = 'user', lazy = 'dynamic')
     downvotes = db.relationship('Downvote', backref = 'user', lazy = 'dynamic')
@@ -37,6 +37,34 @@ class User(UserMixin,db.Model):
 
     def __repr__(self):
         return f'User {self.username} '
+
+class Pitch:
+    #class to define pitch objects
+    __tablename__='pitches'
+
+    id=db.Column(db.Integer,primary_key=True)
+    title=db.Column(db.String(255))
+    image_url=db.Column(db.String)
+    category=db.Column(db.String)
+    author=db.Column(db.String(255))
+    content=db.Column(db.Text)
+    published=db.Column(db.DateTime,default=datetime.utcnow)
+    user_id=db.Column(db.Integer,db.ForeignKey('users.id'))
+    comments=db.relationship('Comment',backref='pitch',lazy="dynamic")
+    upvotes = db.relationship('Upvote', backref = 'pitch', lazy = 'dynamic')
+    downvotes = db.relationship('Downvote', backref = 'pitch', lazy = 'dynamic')
+
+    def save_pitch(self):
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def get_pitches(cls,category):
+        pitches=Pitch.query.filter_by(category=category).all()
+        return pitches
+
+    def __repr__(self):
+        return(f"User ('{self.title}','{self.published}')")
 
 class Comment(db.Model):
     __tablename__='comments'
@@ -63,33 +91,6 @@ class Comment(db.Model):
 
     def __repr__(self):
         return(f"User('{self.content}', '{self.posted}')")
-class Pitch:
-    #class to define pitch objects
-    __tablename__='pitches'
-
-    id=db.Column(db.Integer,primary_key=True)
-    title=db.Column(db.String(255))
-    image_url=db.Column(db.String)
-    category=db.Column(db.String)
-    author=db.Column(db.String(255))
-    content=db.Column(db.Text)
-    published=db.Column(db.DateTime,default=datetime.utcnow)
-    user_id=db.Column(db.Integer,db.ForeignKey('users.user_id'))
-    comments=db.relationship('Comment',backref='pitch',lazy="dynamic")
-    upvotes = db.relationship('Upvote', backref = 'pitch', lazy = 'dynamic')
-    downvotes = db.relationship('Downvote', backref = 'pitch', lazy = 'dynamic')
-
-    def save_pitch(self):
-        db.session.add(self)
-        db.session.commit()
-
-    @classmethod
-    def get_pitches(cls,category):
-        pitches=Pitch.query.filter_by(category=category).all()
-        return pitches
-
-    def __repr__(self):
-        return(f"User ('{self.title}','{self.published}')")
 
 class Upvote(db.Model):
     
