@@ -1,6 +1,6 @@
 from crypt import methods
 from unicodedata import category
-from ..models import User,Comment,Pitch
+from ..models import User,Comment,Pitch,Upvote,Downvote
 from flask import render_template,request,redirect,url_for,abort
 from flask_login import current_user, login_required
 from . import main
@@ -11,7 +11,16 @@ import markdown2
 @main.route('/')
 def index():
     title='Pitch it...One minute could change your life.'
-    return render_template('index.html',title=title)
+    pitches=Pitch.query.all()
+    users=User.quer.all()
+    pickup_lines = Pitch.query.filter_by(category = 'pickup line').all()
+    business = Pitch.query.filter_by(category = 'business idea').all()
+    tech = Pitch.query.filter_by(category = 'tech startup').all()
+    art = Pitch.query.filter_by(category = 'art project').all()
+    vacation= Pitch.query.filter_by(category = 'vacation plan').all()
+    marketing = Pitch.query.filter_by(category = 'marketing strategy').all()
+
+    return render_template('index.html',title=title,pitches=pitches,users=users,pickup_lines=pickup_lines,business=business,tech=tech,art=art,vacation=vacation,marketing=marketing)
 
 @main.route('/user/<uname>')
 def profile(uname):
@@ -124,7 +133,42 @@ def comment(id):
     
     format_comment = markdown2.markdown(comment.content,extras=["code-friendly","fenced-code blocks"])
     return render_template('comment.html',comment=comment,format_comment=format_comment)
-        
+
+@main.route('/upvote/<int:id>',methods=['GET','POST']) 
+@login_required
+def upvote(id):
+    pitch=Pitch.query.get(id) 
+    if pitch is None:
+        abort(404)
+
+    upvote=Upvote.query.filter_by(user_id=current_user.id,pitch_id=id).first()
+
+    if upvote is not None:
+        # db.session.delete(upvote)
+        # db.session.commit()
+        return redirect(url_for('main.index'))
+
+    new_upvote=Upvote(pitch_id=id,user_id=current_user.id)
+    new_upvote.add_upvotes(id)
+    return redirect(url_for('main.index'))
+
+@main.route('/downvote/<int:id>',methods=['GET','POST']) 
+@login_required
+def downvote(id):
+    pitch=Pitch.query.get(id) 
+    if pitch is None:
+        abort(404)
+
+    downvote=Downvote.query.filter_by(user_id=current_user.id,pitch_id=id).first()
+
+    if downvote is not None:
+        # db.session.delete(upvote)
+        # db.session.commit()
+        return redirect(url_for('main.index'))
+
+    new_downvote=Downvote(pitch_id=id,user_id=current_user.id)
+    new_downvote.add_downvotes(id)
+    return redirect(url_for('main.index'))
 
 #comment form view
 #single pitch view
