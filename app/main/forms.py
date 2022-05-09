@@ -15,7 +15,7 @@ class CommentForm(FlaskForm):
 class PitchForm(FlaskForm):
     # image=
     category=SelectField('category',choices=[('pickup line','pickup line'),('business idea','business idea'),('tech startup','tech startup'),('art project','art project'),('vacation plan','vacation plan'),('marketing strategy','marketing strategy')],validators=[Optional()])
-    title=StringField('pitch title',validators=[InputRequired])
-    author=StringField('author',validators=[InputRequired])
-    description=TextAreaField('description',validators=[InputRequired])
+    title=StringField('pitch title',validators=[InputRequired()])
+    author=StringField('author',validators=[InputRequired()])
+    description=TextAreaField('description',validators=[InputRequired()])
     submit=SubmitField('Submit')

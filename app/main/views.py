@@ -18,7 +18,7 @@ def profile(uname):
     if user is None:
         abort(404)
 
-    return render_template('profile/profile.html',user=user)
+    return render_template('/profile/profile.html',user=user)
 
 # @main.route('pitch/new/<int:identity>',methods=['GET','POST'])
 # @login_required
@@ -44,7 +44,7 @@ def profile(uname):
 
 
 
-@main.route('pitch/<int:identity')
+@main.route('/pitch/<int:identity')
 def pitch(identity):
     pitch=Pitch.query.filter_by(identity=identity).first()
     title=f'{pitch.title} '
