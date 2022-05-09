@@ -3,7 +3,7 @@ from ..models import User,Comment,Pitch
 from flask import render_template,request,redirect,url_for,abort
 from flask_login import login_required
 from . import main
-from .forms import UpdateProfile,CommentForm
+from .forms import UpdateProfile,CommentForm,PitchForm
 from .. import db,photos
 
 @main.route('/')
@@ -20,16 +20,27 @@ def profile(uname):
 
     return render_template('profile/profile.html',user=user)
 
-@main.route('pitch/new/<int:identity>',methods=['GET','POST'])
-@login_required
-def new_pitch(identity):
-    form=PitchForm()
-    if form.validate_on_submit():
-        title=form.title.data
-        description=form.description.data
-        image=form.image_url.data
+# @main.route('pitch/new/<int:identity>',methods=['GET','POST'])
+# @login_required
+# def new_pitch(title):
+#     title='New Pitch'
+#     user=User.query.filter_by(username=uname).first()
+#    )
 
-        new_pitch=Pitch()
+#         if user is None:
+#             abort(404) 
+#     pitch_form=PitchForm()
+#     if pitch_form.validate_on_submit():
+#         pitch=Pitch.query.filter_by(title=title).first(
+        
+#         return redirect(url_for('main.index'))
+#         flash('')
+
+#         title=form.title.data
+#         description=form.description.data
+#         image=form.image_url.data
+
+#         new_pitch=Pitch()
 
 
 
@@ -44,7 +55,7 @@ def pitch(identity):
     if pitch is None:
         abort(404)
 
-    return render_template('pitch.html',pitch=pitch,title=title,)
+    return render_template('pitch.html',pitch=pitch,title=title,image=image,content=content)
 
 @main.route('/user/<uname>/update',methods=['GET','POST'])
 def update_profile(uname):
