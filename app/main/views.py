@@ -6,6 +6,7 @@ from flask_login import current_user, login_required
 from . import main
 from .forms import UpdateProfile,CommentForm,PitchForm
 from .. import db,photos
+import markdown2
 
 @main.route('/')
 def index():
@@ -113,6 +114,16 @@ def new_comment(pitch_id):
         return redirect(url_for('main.new_comment',pitch_id=pitch_id))
     
     return render_template('new_comment.html',pitch=pitch,comments=comments,comment_form=comment_form)
+
+@main.route('/pitch/comment/<int:pitch_id>')
+@login_required
+def comment(id):
+    comment=Pitch.query.get(id)
+    if comment is None:
+        abort(404)
+    
+    format_comment = markdown2.markdown(comment.content,extras=["code-friendly","fenced-code blocks"])
+    return render_template('comment.html',comment=comment,format_comment=format_comment)
         
 
 #comment form view
