@@ -80,3 +80,12 @@ class Pitch:
     description=db.Column(db.String)
     published=db.Column(db.DateTime,default=datetime.utcnow)
     user_id=db.Column(db.Integer,db.ForeignKey('users.identity'))
+
+    def save_pitch(self):
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def get_pitches(cls,category):
+        pitches=Pitch.query.filter_by(category).all()
+        return pitches

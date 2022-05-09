@@ -1,5 +1,5 @@
 from crypt import methods
-from ..models import User,Comment
+from ..models import User,Comment,Pitch
 from flask import render_template,request,redirect,url_for,abort
 from flask_login import login_required
 from . import main
@@ -19,6 +19,32 @@ def profile(uname):
         abort(404)
 
     return render_template('profile/profile.html',user=user)
+
+@main.route('pitch/new/<int:identity>',methods=['GET','POST'])
+@login_required
+def new_pitch(identity):
+    form=PitchForm()
+    if form.validate_on_submit():
+        title=form.title.data
+        description=form.description.data
+        image=form.image_url.data
+
+        new_pitch=Pitch()
+
+
+
+@main.route('pitch/<int:identity')
+def pitch(identity):
+    pitch=Pitch.query.filter_by(identity=identity).first()
+    title=f'{pitch.title} '
+    image=f'{pitch.image_url} '
+    content=f'{pitch.description} '
+
+
+    if pitch is None:
+        abort(404)
+
+    return render_template('pitch.html',pitch=pitch,title=title,)
 
 @main.route('/user/<uname>/update',methods=['GET','POST'])
 def update_profile(uname):
@@ -48,9 +74,15 @@ def update_pic(uname):
         path = f'photos/{filename}'
         user.profile_pic_url = path
         db.session.commit()
-        
+
     return redirect(url_for('main.profile',uname=uname))
 
 # @main.route('/comment',methods=['GET','POST'])
 # @login_required
 # def new_comment(identify):
+
+#comment form view
+#single pitch view
+#index view of all pitches with categories
+#upvote and downvote and comment button on every pitch 
+
