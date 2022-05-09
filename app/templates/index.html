@@ -8,6 +8,29 @@
     {% endblock %}
 
 {% block content %}
-<h1>pitch it</h1>
+
+
+<div class="container">
+    <h1>Pitch it!</h1>
+    <div class="row">
+        <div class="col-md-8">
+            {% for pitch in pitches %}
+            <div class="card" style="width: 18rem;">
+                
+                <div class="card-body">
+                  <h3 class="card-title">{{pitch.title}} </h3>
+                  <p class="card-text">{{pitch.category}}</p>
+                  <p class="card-text">{{pitch.description}}</p>
+                  <p class="card-text">Published: {{pitch.published}}</p>
+                  <a href="{{url_for('.new_comment',pitch_id=pitch_id)}} " class="btn btn-primary">comments</a>
+                  <a  href="{{url_for('.new_comment',id=pitch_id)}} " class="btn btn-success"> {{pitch.upvote.count()}} Upvote</a>
+                  <a  href="{{url_for('.new_comment',id=pitch_id)}} " class="btn btn-danger"> {{pitch.downvote.count()}} Downvote</a>
+
+                </div>
+              </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 
 {% endblock %}
