@@ -2,7 +2,7 @@ from crypt import methods
 from unicodedata import category
 from ..models import User,Comment,Pitch
 from flask import render_template,request,redirect,url_for,abort
-from flask_login import login_required
+from flask_login import current_user, login_required
 from . import main
 from .forms import UpdateProfile,CommentForm,PitchForm
 from .. import db,photos
@@ -42,9 +42,11 @@ def new_pitch(uname):
         new_pitch.save_pitch()
         
         return redirect(url_for('main.index'))
+    else:
+        pitches=Pitch.query.order_by(Pitch.published).all
         
 
-    return render_template('new_pitch.html',title=title,pitch_form=pitch_form)
+    return render_template('new_pitch.html',title=title,pitch_form=pitch_form,pitches=pitches)
 
 
 
@@ -52,14 +54,15 @@ def new_pitch(uname):
 def pitch(id):
     pitch=Pitch.query.get(id)
     title=f'{pitch.title} '
-    image=f'{pitch.image_url} '
-    content=f'{pitch.description} '
+    category=f'{pitch.category} '
+    author=f'{pitch.author} '
+    description=f'{pitch.description} '
 
 
     if pitch is None:
         abort(404)
 
-    return render_template('pitch.html',pitch=pitch,title=title,image=image,content=content)
+    return render_template('pitch.html',pitch=pitch,title=title,category=category,author=author,description=description)
 
 @main.route('/user/<uname>/update',methods=['GET','POST'])
 def update_profile(uname):
@@ -92,9 +95,25 @@ def update_pic(uname):
 
     return redirect(url_for('main.profile',uname=uname))
 
-# @main.route('/comment',methods=['GET','POST'])
-# @login_required
-# def new_comment(identify):
+@main.route('/comment/<int:pitch_id>',methods=['GET','POST'])
+@login_required
+def new_comment(pitch_id):
+    comment_form=CommentForm()
+    pitch=Pitch.query.get(pitch_id)
+    comments=Comment.query.filter_by(pitch_id=pitch_id).all()
+
+    if comment_form.validate_on_submit():
+        content=comment_form.content.data
+        user_id=current_user._get_current_object().id
+
+        new_comment=Comment(content=content,user_id=user_id,pitch_id=pitch_id)
+
+        new_comment.save_comment()
+
+        return redirect(url_for('main.new_comment',pitch_id=pitch_id))
+    
+    return render_template('new_comment.html',pitch=pitch,comments=comments,comment_form=comment_form)
+        
 
 #comment form view
 #single pitch view
