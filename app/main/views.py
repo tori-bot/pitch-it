@@ -49,8 +49,8 @@ def new_pitch(uname):
 
 
 @main.route('/pitch/<int:identity>')
-def pitch(identity):
-    pitch=Pitch.query.filter_by(identity=identity).first()
+def pitch(id):
+    pitch=Pitch.query.get(id)
     title=f'{pitch.title} '
     image=f'{pitch.image_url} '
     content=f'{pitch.description} '
