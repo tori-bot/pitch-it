@@ -15,12 +15,13 @@ class User(UserMixin,db.Model):
     id=db.Column(db.Integer,primary_key=True)
     username=db.Column(db.String(255),unique=True)
     email = db.Column(db.String(255),unique = True,index = True)
-    # role_id=db.Column(db.Integer,db.ForeignKey('roles.role_id'))
     pass_secure=db.Column(db.String(255))
     bio=db.Column(db.String(255))
     profile_pic_url=db.Column(db.String())
     comments=db.relationship('Comment',backref='author' ,lazy="dynamic")
-    pitches=db.relationship('Pitch',backref='author' ,lazy="dynamic")
+    pitches=db.relationship('Pitch',backref='user' ,lazy="dynamic")
+    upvotes = db.relationship('Upvote', backref = 'user', lazy = 'dynamic')
+    downvotes = db.relationship('Downvote', backref = 'user', lazy = 'dynamic')
 
     @property
     def password(self):
@@ -37,18 +38,6 @@ class User(UserMixin,db.Model):
     def __repr__(self):
         return f'User {self.username} '
 
-# class Role(db.Model):
-#     #class to define different roles
-#     __tablename__='roles'
-
-#     role_id=db.Column(db.Integer,primary_key=True)
-#     name=db.Column(db.String(255))
-#     users=db.relationship('User',backref='role' ,lazy="dynamic")
-
-
-    # def __repr__(self):
-    #     return f'User {self.name} '
-
 class Comment(db.Model):
     __tablename__='comments'
 
@@ -58,14 +47,20 @@ class Comment(db.Model):
     posted=db.Column(db.DateTime,default=datetime.utcnow)
     user_id=db.Column(db.Integer,db.ForeignKey('users.id'))
 
-    # def save_comment(self):
-    #     db.session.add(self)
-    #     db.session.commit()
+    def save_comment(self):
+        db.session.add(self)
+        db.session.commit()
 
-    # @classmethod
-    # def get_comment(cls,identity):
-    #     comments=Comment.query.filter_by(pitch_id=identity).all()
-    #     return comments
+    @classmethod
+    def add_comment(cls,id):
+        comment = Comment(user = current_user, pitch_id=id)
+        comment.save_comment()
+
+    @classmethod
+    def get_comment(cls,id):
+        comments=Comment.query.filter_by(pitch_id=id).all()
+        return comments
+
     def __repr__(self):
         return(f"User('{self.content}', '{self.posted}')")
 class Pitch:
@@ -81,6 +76,8 @@ class Pitch:
     published=db.Column(db.DateTime,default=datetime.utcnow)
     user_id=db.Column(db.Integer,db.ForeignKey('users.user_id'))
     comments=db.relationship('Comment',backref='pitch',lazy="dynamic")
+    upvotes = db.relationship('Upvote', backref = 'pitch', lazy = 'dynamic')
+    downvotes = db.relationship('Downvote', backref = 'pitch', lazy = 'dynamic')
 
     def save_pitch(self):
         db.session.add(self)
@@ -107,6 +104,7 @@ class Upvote(db.Model):
     db.session.add(self)
     db.session.commit()
 
+  @classmethod
   def add_upvotes(cls,id):
     upvote_pitch = Upvote(user = current_user, pitch_id=id)
     upvote_pitch.save_upvotes()
