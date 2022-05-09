@@ -1,4 +1,5 @@
 from crypt import methods
+from unicodedata import category
 from ..models import User,Comment,Pitch
 from flask import render_template,request,redirect,url_for,abort
 from flask_login import login_required
@@ -20,27 +21,30 @@ def profile(uname):
 
     return render_template('/profile/profile.html',user=user)
 
-# @main.route('pitch/new/<int:identity>',methods=['GET','POST'])
-# @login_required
-# def new_pitch(title):
-#     title='New Pitch'
-#     user=User.query.filter_by(username=uname).first()
-#    )
+@main.route('pitch/new/<int:identity>',methods=['GET','POST'])
+@login_required
+def new_pitch(uname):
+    title='New Pitch'
+    user=User.query.filter_by(username=uname).first()
 
-#         if user is None:
-#             abort(404) 
-#     pitch_form=PitchForm()
-#     if pitch_form.validate_on_submit():
-#         pitch=Pitch.query.filter_by(title=title).first(
+    if user is None:
+        abort(404) 
+
+    pitch_form=PitchForm()
+    if pitch_form.validate_on_submit():
+        title=pitch_form.title.data
+        category=pitch_form.category.data
+        author=pitch_form.author.data
+        description=pitch_form.description.data
+
+        new_pitch=Pitch(title=title,category=category, author=author, content=description)
+
+        new_pitch.save_pitch()
         
-#         return redirect(url_for('main.index'))
-#         flash('')
+        return redirect(url_for('main.index'))
+        
 
-#         title=form.title.data
-#         description=form.description.data
-#         image=form.image_url.data
-
-#         new_pitch=Pitch()
+    return render_template('new_pitch.html',title=title,pitch_form=pitch_form)
 
 
 

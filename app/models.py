@@ -44,7 +44,6 @@ class Pitch:
 
     id=db.Column(db.Integer,primary_key=True)
     title=db.Column(db.String(255))
-    image_url=db.Column(db.String)
     category=db.Column(db.String)
     author=db.Column(db.String(255))
     content=db.Column(db.Text)
