@@ -1,33 +1,33 @@
 {% extends 'base.html' %}
 
 {% block styles %}
-        {{super()}} 
+    {{super()}} 
         
-        <link href="{{url_for('static',filename='css/index.css')}} " rel="stylesheet">
+    <link href="{{url_for('static',filename='css/index.css')}} " rel="stylesheet">
        
-    {% endblock %}
+{% endblock %}
 
 {% block content %}
 
 
-<div class="container">
+<div class="container" style="width:100%">
     <h1>Pitch it! A minute can change your life.</h1>
-    <a href="{{url_for('main.new_pitch',pitch_id=current_user.id)}} " class="btn">New pitch</a>
-    <div class="row">
-        <div class="col-md-8">
+    <a href="{{url_for('main.new_pitch',pitch_id=current_user.id)}} " class="btn" style="border: solid black 2px;border-radius: 5px ;">New pitch</a>
+    <div class="row" style="margin: 5vh 3vw;" >
+        <!-- <div class="col-md-7"> -->
             {% for pitch in pitches %}
-            <div class="card" style="width: 30rem;">
+            <div class="card" style=" border-radius: 3px;border: solid black;box-shadow: 10px 10px 5px rgb(49, 49, 49); height: 40vh; margin-bottom: 5vh; text-align: center; ">
                 
                 <div class="card-body">
                   <h3 class="card-title">{{pitch.title}} </h3>
                   <p class="card-text">{{pitch.category}}</p>
-                  <p class="card-text">{{pitch.description}}</p>
+                  <p class="card-text">{{pitch.content}}</p>
                   <p class="card-text">Published: {{pitch.published}}</p>
                   <a href="{{url_for('main.new_comment',pitch_id=current_user.id)}} " class="btn btn-primary">Comment</a>
                   <a  href="{{url_for('.upvote',id=pitch_id)}} " class="btn btn-success"> {{pitch.upvotes.count()}} Upvote</a>
                   <a  href="{{url_for('.downvote',id=pitch_id)}} " class="btn btn-danger"> {{pitch.downvotes.count()}} Downvote</a>
 
-                </div>
+                <!-- </div> -->
               </div>
         </div>
         {% endfor %}
