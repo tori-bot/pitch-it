@@ -105,7 +105,7 @@ def update_pic(uname):
 
     return redirect(url_for('main.profile',uname=uname))
 
-@main.route('/new_comment/<int:pitch_id>',methods=['GET','POST'])
+@main.route('/new_comment',methods=['GET','POST'])
 @login_required
 def new_comment(pitch_id):
     comment_form=CommentForm()
@@ -170,8 +170,7 @@ def downvote(id):
     new_downvote.add_downvotes(id)
     return redirect(url_for('main.index'))
 
-#comment form view
-#single pitch view
-#index view of all pitches with categories
-#upvote and downvote and comment button on every pitch 
-
+@main.route('/welcome') 
+def welcome():
+    title='Welcome'
+    return render_template('welcome.html',title=title)

@@ -10,19 +10,22 @@
 {% block content %}
 
 
-<div class="container" style="width:100%">
-    <h1>Pitch it! A minute can change your life.</h1>
-    <a href="{{url_for('main.new_pitch',pitch_id=current_user.id)}} " class="btn" style="border: solid black 2px;border-radius: 5px ;">New pitch</a>
+<div class="container" style="width:100%;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
+    <h1 style="text-align: center;">Pitch it! One minute can change your life.</h1>
+    <a href="{{url_for('main.new_pitch',pitch_id=current_user.id)}} " class="btn" style="border: solid black 2px;border-radius: 5px ;margin-left: 45vw;">New pitch</a>
+    <hr>
     <div class="row" style="margin: 5vh 3vw;" >
         <!-- <div class="col-md-7"> -->
             {% for pitch in pitches %}
             <div class="card" style=" border-radius: 3px;border: solid black;box-shadow: 10px 10px 5px rgb(49, 49, 49); height: 40vh; margin-bottom: 5vh; text-align: center; ">
                 
                 <div class="card-body">
-                  <h3 class="card-title">{{pitch.title}} </h3>
-                  <p class="card-text">{{pitch.category}}</p>
+                  <h3 class="card-title">{{pitch.title}}   </h3>
+                  <h5 class="card-text text-muted">{{pitch.category}}</h5>
+                  <h4>Author: {{pitch.author}}</h4>
                   <p class="card-text">{{pitch.content}}</p>
-                  <p class="card-text">Published: {{pitch.published}}</p>
+                  <p class="card-text"><small class="text-muted">Published: {{pitch.published}}</small></p>
+                
                   <a href="{{url_for('main.new_comment',pitch_id=current_user.id)}} " class="btn btn-primary">Comment</a>
                   <a  href="{{url_for('.upvote',id=pitch_id)}} " class="btn btn-success"> {{pitch.upvotes.count()}} Upvote</a>
                   <a  href="{{url_for('.downvote',id=pitch_id)}} " class="btn btn-danger"> {{pitch.downvotes.count()}} Downvote</a>
