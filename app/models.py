@@ -38,7 +38,7 @@ class User(UserMixin,db.Model):
     def __repr__(self):
         return f'User {self.username} '
 
-class Pitch:
+class Pitch(db.Model):
     #class to define pitch objects
     __tablename__='pitches'
 
@@ -138,8 +138,8 @@ class Downvote(db.Model):
 
 
   def add_downvotes(cls, id):
-    downvote_pitch = Downvote(user = current_user, pitch_id=id)
-    downvote_pitch.save_downvotes()
+      downvote_pitch = Downvote(user = current_user, pitch_id=id)
+      downvote_pitch.save_downvotes()
 
   
   @classmethod

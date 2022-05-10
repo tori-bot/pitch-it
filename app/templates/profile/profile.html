@@ -19,7 +19,7 @@
   <div class="col-md-4">
 
     {% if user.profile_pic_url %}
-    <img src="{{url_for('static/photos',filename=user.profile_pic_url)}}" alt="" class="img-thumbnail">
+    <img src="{{url_for('static',filename=user.profile_pic_url)}}" alt="" class="img-thumbnail">
     {%else%}
     <p>No profile picture</p>
     {% endif %}
@@ -32,10 +32,11 @@
     <input type="submit">
   </form>
 
-<!-- <a href="{{url_for('main.update_profile',uname=user.username)}} "><button>Edit profile</button></a> -->
+<a href="{{url_for('main.update_profile',uname=user.username)}} "><button>Edit profile</button></a>
 {% endif %}
 <div class="row">
-    <h1>user's pitches</h1>
+    <h1>{{user.username}}'s pitches</h1>
+    <a href="{{url_for('main.new_pitch',pitch_id=current_user.id)}} " class="btn">New pitch</a>
 </div>
 
 </div>

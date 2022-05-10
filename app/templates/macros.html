@@ -1,0 +1,27 @@
+{% macro displayPitchList(pitches) %}
+{% if pitches %}
+<div class="row tab-content">
+    {% for pitch in pitches %}
+    <div class="card text-center tab-pane active" style="width: 18rem;" id="crd">
+        <div class="card-body">
+            <p class="cart">{{ pitch.category}}</p>
+            <h5 class="card-title">{{ pitch.title}}</h5>
+            
+            <p class="card-text">{{ pitch.description}}</p>
+            <p class="posted-at"> <em>Published: {{ pitch.published}}</em> </p>
+            <a href="#" class="btn btn-outline-info btn-block">Comment</a>
+        </div>
+
+    </div>
+
+    {% endfor %}
+    {% else %}
+    <div class="card w-90 mb-3">
+        <div class="card-body">
+
+            <p class="card-title">Category has 0 posts</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endmacro %}

@@ -12,7 +12,7 @@ import markdown2
 def index():
     title='Pitch it...One minute could change your life.'
     pitches=Pitch.query.all()
-    users=User.quer.all()
+    users=User.query.all()
     pickup_lines = Pitch.query.filter_by(category = 'pickup line').all()
     business = Pitch.query.filter_by(category = 'business idea').all()
     tech = Pitch.query.filter_by(category = 'tech startup').all()
@@ -31,11 +31,11 @@ def profile(uname):
 
     return render_template('/profile/profile.html',user=user)
 
-@main.route('pitch/new/<int:identity>',methods=['GET','POST'])
+@main.route('/pitch/new',methods=['GET','POST'])
 @login_required
-def new_pitch(uname):
+def new_pitch():
     title='New Pitch'
-    user=User.query.filter_by(username=uname).first()
+    user=User.query.filter_by(id=current_user.id).first()
 
     if user is None:
         abort(404) 
@@ -60,7 +60,7 @@ def new_pitch(uname):
 
 
 
-@main.route('/pitch/<int:identity>')
+@main.route('/pitch')
 def pitch(id):
     pitch=Pitch.query.get(id)
     title=f'{pitch.title} '
@@ -105,26 +105,26 @@ def update_pic(uname):
 
     return redirect(url_for('main.profile',uname=uname))
 
-@main.route('/comment/<int:pitch_id>',methods=['GET','POST'])
+@main.route('/new_comment/<int:pitch_id>',methods=['GET','POST'])
 @login_required
 def new_comment(pitch_id):
     comment_form=CommentForm()
-    pitch=Pitch.query.get(pitch_id)
-    comments=Comment.query.filter_by(pitch_id=pitch_id).all()
+    pitch=Pitch.query.get(id)
+    all_comments=Comment.query.filter_by(pitch_id=pitch_id).all()
 
     if comment_form.validate_on_submit():
-        content=comment_form.content.data
+        comment=comment_form.comment.data
         user_id=current_user._get_current_object().id
 
-        new_comment=Comment(content=content,user_id=user_id,pitch_id=pitch_id)
+        new_comment=Comment(comment=comment,user_id=user_id,pitch_id=pitch_id)
 
         new_comment.save_comment()
 
-        return redirect(url_for('main.new_comment',pitch_id=pitch_id))
+        return redirect(url_for('main.new_comment',id=id))
     
-    return render_template('new_comment.html',pitch=pitch,comments=comments,comment_form=comment_form)
+    return render_template('new_comment.html',pitch=pitch,all_comments=all_comments,comment_form=comment_form)
 
-@main.route('/pitch/comment/<int:pitch_id>')
+@main.route('/pitch/comment')
 @login_required
 def comment(id):
     comment=Pitch.query.get(id)
@@ -134,14 +134,14 @@ def comment(id):
     format_comment = markdown2.markdown(comment.content,extras=["code-friendly","fenced-code blocks"])
     return render_template('comment.html',comment=comment,format_comment=format_comment)
 
-@main.route('/upvote/<int:id>',methods=['GET','POST']) 
+@main.route('/pitch/upvote',methods=['GET','POST']) 
 @login_required
-def upvote(id):
+def upvote():
     pitch=Pitch.query.get(id) 
     if pitch is None:
         abort(404)
 
-    upvote=Upvote.query.filter_by(user_id=current_user.id,pitch_id=id).first()
+    upvote=Upvote.query.filter_by(user_id=current_user.id,pitch_id=pitch.id).first()
 
     if upvote is not None:
         # db.session.delete(upvote)
@@ -152,7 +152,7 @@ def upvote(id):
     new_upvote.add_upvotes(id)
     return redirect(url_for('main.index'))
 
-@main.route('/downvote/<int:id>',methods=['GET','POST']) 
+@main.route('/downvote',methods=['GET','POST']) 
 @login_required
 def downvote(id):
     pitch=Pitch.query.get(id) 
