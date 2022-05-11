@@ -40,7 +40,7 @@
     <a href="{{url_for('main.new_pitch',pitch_id=current_user.id)}} " class="btn" style="color:white;background-color: rgb(131, 29, 114); border: solid black 2px;border-radius: 5px ;height: 7vh;width: 13vw;font-size: large;margin-left: 42vw;margin-top: 5vh; ">Add New pitch</a>
 </div>
 <div class="row">
-  {% if pitches %}
+  
   <h1 style="text-align: center;">{{user.username}}'s pitch entries </h1>
   {% for item in pitches %}
             <div class="card" style=" border-radius: 3px;border: solid black;box-shadow: 10px 10px 5px rgb(49, 49, 49); height: 40vh; margin-bottom: 5vh; text-align: center; ">
@@ -60,8 +60,7 @@
               </div>
         </div>
         {% endfor %}
-        {% else %}
-        <h2>No pitch entries yet.</h2>
+        
         {%endif %}
 </div>
 </div>
