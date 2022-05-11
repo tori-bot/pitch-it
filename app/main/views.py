@@ -10,6 +10,7 @@ import markdown2
 
 @main.route('/')
 def index():
+    
     title='Pitch it...One minute could change your life.'
     pitches=Pitch.query.all()
     users=User.query.all()
