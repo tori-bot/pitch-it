@@ -10,7 +10,7 @@ import markdown2
 
 @main.route('/')
 def index():
-    
+
     title='Pitch it...One minute could change your life.'
     pitches=Pitch.query.all()
     users=User.query.all()
@@ -26,11 +26,11 @@ def index():
 @main.route('/user/<uname>')
 def profile(uname):
     user=User.query.filter_by(username=uname).first()
-
+    pitches=Pitch.query.filter_by(user_id=current_user.id).all()
     if user is None:
         abort(404)
 
-    return render_template('/profile/profile.html',user=user)
+    return render_template('/profile/profile.html',user=user,pitches=pitches)
 
 @main.route('/pitch/new',methods=['GET','POST'])
 @login_required

@@ -27,18 +27,42 @@
   </div>
 </div>
 {% if user==current_user %}
-<form style="width: 29vw;margin-top: 5vh; margin-left: 31vw; " action="{{url_for('main.update_pic',uname=user.username)}}" method="post" enctype = "multipart/form-data">
+<form style="width: 29vw;margin-top: 5vh; margin-left: 33vw; " action="{{url_for('main.update_pic',uname=user.username)}}" method="post" enctype = "multipart/form-data">
 
     <input type="file"  name="photo" class="form-control" required>
-    <input style="margin-top: 3vh;margin-left: 16vw;border: solid black 2px;border-radius: 5px ; " type="submit">
+    <input style="margin-top: 3vh;margin-left: 15vw;border: solid black 2px;border-radius: 5px ; " type="submit">
   </form>
 
 
 {% endif %}
 <div class="row">
     <!-- <h1>{{user.username}}'s pitches</h1> -->
-    <a href="{{url_for('main.new_pitch',pitch_id=current_user.id)}} " class="btn" style="color:white;background-color: rgb(131, 29, 114); border: solid black 2px;border-radius: 5px ;height: 7vh;width: 13vw;font-size: large;margin-left: 40vw;margin-top: 5vh; ">Add New pitch</a>
+    <a href="{{url_for('main.new_pitch',pitch_id=current_user.id)}} " class="btn" style="color:white;background-color: rgb(131, 29, 114); border: solid black 2px;border-radius: 5px ;height: 7vh;width: 13vw;font-size: large;margin-left: 42vw;margin-top: 5vh; ">Add New pitch</a>
 </div>
+<div class="row">
+  {% if pitches %}
+  <h1 style="text-align: center;">{{user.username}}'s pitch entries </h1>
+  {% for item in pitches %}
+            <div class="card" style=" border-radius: 3px;border: solid black;box-shadow: 10px 10px 5px rgb(49, 49, 49); height: 40vh; margin-bottom: 5vh; text-align: center; ">
+                
+                <div class="card-body">
+                  <h3 class="card-title">{{item.title}}   </h3>
+                  <h5 class="card-text text-muted">{{item.category}}</h5>
+                  <h4>Author: {{item.author}}</h4>
+                  <p class="card-text">{{item.content}}</p>
+                  <p class="card-text"><small class="text-muted">Published: {{item.published}}</small></p>
+                
+                  <a href="... " class="btn btn-primary">Comment</a>
+                  <a  href="... " class="btn btn-success">  Upvote</a>
+                  <a  href="..." class="btn btn-danger"> Downvote</a>
 
+                <!-- </div> -->
+              </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <h2>No pitch entries yet.</h2>
+        {%endif %}
+</div>
 </div>
 {% endblock %}
