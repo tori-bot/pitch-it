@@ -1,7 +1,7 @@
 {% extends 'base.html'%}
 
 {% block content %}
-<div class="container">
+<div class="container" style="background-image: url(https://images.unsplash.com/photo-1582201957424-621320ad670d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NzN8fGFydHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60);  background-size: 100%;">
 <div class="row">
 <!-- displaying  Username-->
   <div class="col-md-4">
@@ -37,7 +37,7 @@
 {% endif %}
 <div class="row">
     <!-- <h1>{{user.username}}'s pitches</h1> -->
-    <a href="{{url_for('main.new_pitch',pitch_id=current_user.id)}} " class="btn" style="color:black;background-color: aquamarine; border: solid black 2px;border-radius: 5px ;height: 7vh;width: 13vw;font-size: large;margin-left: 36vw;margin-top: 5vh; ">Add New pitch</a>
+    <a href="{{url_for('main.new_pitch',pitch_id=current_user.id)}} " class="btn" style="color:black;background-color: rgb(131, 29, 114); border: solid black 2px;border-radius: 5px ;height: 7vh;width: 13vw;font-size: large;margin-left: 36vw;margin-top: 5vh; ">Add New pitch</a>
 </div>
 
 </div>
