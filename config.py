@@ -13,13 +13,13 @@ class Config:
     MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
 
 class ProdConfig(Config):
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL").replace("://", "ql://", 1)
     # .replace("://", "ql://", 1)
     DEBUG=True
 
 class DevConfig(Config):
     SQLALCHEMY_DATABASE_URI='postgresql+psycopg2://elvis:moraaelvis@localhost/pitch'
-    DEBUG=True
+    # DEBUG=True
     
 
 class TestConfig(Config):

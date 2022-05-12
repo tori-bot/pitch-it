@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row" style="margin: 5vh 3vw;" >
+    <h2 style="text-align: center;">{{user.username}}'s pitches </h2>
+    
+        {% for item in pitches %}
+        <div class="card" style="font-weight: bold; border-radius: 3px;border: solid black;box-shadow: 10px 10px 5px rgb(49, 49, 49); height: 40vh; margin-bottom: 5vh; text-align: center; ">
+            
+            <div class="card-body">
+              <h3 class="card-title">{{item.title}}   </h3>
+              <h5 class="card-text text-muted">{{item.category}}</h5>
+              <h4>Author: {{item.author}}</h4>
+              <p class="card-text">{{item.content}}</p>
+              <p class="card-text"><small class="text-muted">Published: {{item.published}}</small></p>
+            
+              <a href="{{url_for('main.new_comment',pitch_id_comment=item.id )}} " class="btn btn-primary">Comment</a>
+              <a  href="/my_pitches.html" class="btn btn-success">  Upvote</a>
+              <a  href="/my_pitches.html" class="btn btn-danger"> Downvote</a>
+
+            
+          </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

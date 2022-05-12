@@ -61,19 +61,15 @@ def new_pitch():
 
 
 
-@main.route('/pitch')
-def pitch(id):
-    pitch=Pitch.query.get(id)
-    title=f'{pitch.title} '
-    category=f'{pitch.category} '
-    author=f'{pitch.author} '
-    description=f'{pitch.description} '
+@main.route('/user/<uname>/user_pitches')
+def user_pitches(uname):
+    user=User.query.filter_by(username=uname).first()
+    pitches=Pitch.query.filter_by(user_id=user.id).all()
 
+    if pitches is None:
+        return redirect('/profile/profile.html')
 
-    if pitch is None:
-        abort(404)
-
-    return render_template('pitch.html',pitch=pitch,title=title,category=category,author=author,description=description)
+    return render_template('profile/my_pitches.html',user=user,pitches=pitches)
 
 @main.route('/user/<uname>/update',methods=['GET','POST'])
 def update_profile(uname):
