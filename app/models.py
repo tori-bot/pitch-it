@@ -69,7 +69,7 @@ class Comment(db.Model):
     __tablename__='comments'
 
     id=db.Column(db.Integer,primary_key=True)
-    pitch_id=db.Column(db.Integer,db.ForeignKey('pitches.id',ondelete='CASCADE'))
+    pitch_id_comment=db.Column(db.Integer,db.ForeignKey('pitches.id',ondelete='CASCADE'))
     content=db.Column(db.Text)
     posted=db.Column(db.DateTime,default=datetime.utcnow)
     user_id=db.Column(db.Integer,db.ForeignKey('users.id'))
@@ -98,7 +98,7 @@ class Upvote(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   upvote = db.Column(db.Integer, default = 0)
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-  pitch_id = db.Column(db.Integer, db.ForeignKey('pitches.id'))
+  pitch_id_upvote = db.Column(db.Integer, db.ForeignKey('pitches.id'))
 
   def save_upvotes(self):
     db.session.add(self)
@@ -106,13 +106,13 @@ class Upvote(db.Model):
 
   @classmethod
   def add_upvotes(cls,id):
-    upvote_pitch = Upvote(user = current_user, pitch_id=id)
+    upvote_pitch = Upvote(user = current_user, pitch_id_upvote=id)
     upvote_pitch.save_upvotes()
 
     
   @classmethod
   def get_upvotes(cls,id):
-    upvote = Upvote.query.filter_by(pitch_id=id).all()
+    upvote = Upvote.query.filter_by(pitch_id_upvote=id).all()
     return upvote
 
   @classmethod
@@ -129,7 +129,7 @@ class Downvote(db.Model):
 
   id = db.Column(db.Integer, primary_key=True)
   downvote = db.Column(db.Integer, default=0)
-  pitch_id = db.Column(db.Integer, db.ForeignKey('pitches.id'))
+  pitch_id_downvote = db.Column(db.Integer, db.ForeignKey('pitches.id'))
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
   def save_downvotes(self):

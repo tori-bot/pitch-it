@@ -106,24 +106,28 @@ def update_pic(uname):
 
     return redirect(url_for('main.profile',uname=uname))
 
-@main.route('/new_comment',methods=['GET','POST'])
+@main.route('/pitch/<int:pitch_id_comment>/new_comment',methods=['GET','POST'])
 @login_required
-def new_comment(pitch_id):
+def new_comment(pitch_id_comment):
+    
     comment_form=CommentForm()
-    pitch=Pitch.query.get(id)
-    all_comments=Comment.query.filter_by(pitch_id=pitch_id).all()
-
+    
+    pitch=Pitch.query.get(pitch_id_comment)
+   
+    all_comments=Comment.query.filter_by(pitch_id_comment=pitch_id_comment).all()
+    title=f'{pitch.title} '
     if comment_form.validate_on_submit():
         comment=comment_form.comment.data
-        user_id=current_user._get_current_object().id
+        
+        # user_id=current_user._get_current_object().id
 
-        new_comment=Comment(comment=comment,user_id=user_id,pitch_id=pitch_id)
+        new_comment=Comment(content=comment,user=current_user,pitch_id_comment=pitch_id_comment)
 
         new_comment.save_comment()
 
-        return redirect(url_for('main.new_comment',id=id))
+        return redirect(url_for('main.new_comment',pitch_id_comment=pitch_id_comment))
     
-    return render_template('new_comment.html',pitch=pitch,all_comments=all_comments,comment_form=comment_form)
+    return render_template('new_comment.html',pitch=pitch,all_comments=all_comments,title=title,comment_form=comment_form)
 
 @main.route('/pitch/comment')
 @login_required

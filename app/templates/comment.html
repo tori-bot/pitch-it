@@ -6,9 +6,25 @@
             {{pitch.category}}
 
         </div>
-        <div class = "col-sm-6">
+        <!-- <div class = "col-sm-6">
             {{format_comment|safe}}
 
+        </div> -->
+        <div class="col-sm-6">
+            {% if all_comments %}
+                {% for comment in all_comments %}
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="thumbnail">
+                            <br>
+                            <p>{{comment.comment}} </p>
+                            <p>by: {{comment.user.username}} </p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+            {% endif %}
         </div>
     </div>
 </div>

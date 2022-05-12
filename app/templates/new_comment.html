@@ -5,11 +5,28 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-2"></div>
+        <div class="col-md-2"> </div>
         <div class="col-md-8">
             {{ wtf.quick_form(comment_form) }}
         </div>
         <div class="col-md-2"></div>
+    </div>
+    <a href='/'><button>To pitches</button></a>
+    <div class="row">
+        {% if all_comments %}
+                {% for comment in all_comments %}
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="thumbnail">
+                            <br>
+                            <p>{{comment.content}} </p>
+                            <p>by: {{comment.user.username}} </p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+            {% endif %}
     </div>
 </div>
 
